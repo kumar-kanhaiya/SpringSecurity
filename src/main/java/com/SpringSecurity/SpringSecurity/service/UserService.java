@@ -4,4 +4,6 @@ import com.SpringSecurity.SpringSecurity.entity.Users;
 
 public interface UserService {
     public Users register(Users user);
+
+    public String verify(Users users);
 }
