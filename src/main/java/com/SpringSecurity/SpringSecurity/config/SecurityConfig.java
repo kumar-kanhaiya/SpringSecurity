@@ -1,5 +1,6 @@
 package com.SpringSecurity.SpringSecurity.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,13 +19,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsSer;
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -41,7 +47,8 @@ public class SecurityConfig {
 //                .logout(Customizer.withDefaults());
                 .sessionManagement(session->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+                 .addFilterBefore(jwtFilter , UsernamePasswordAuthenticationFilter.class)
+                 .build();
 
 
     }
