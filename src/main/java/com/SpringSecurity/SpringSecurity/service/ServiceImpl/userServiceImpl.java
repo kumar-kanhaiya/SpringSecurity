@@ -2,6 +2,7 @@ package com.SpringSecurity.SpringSecurity.service.ServiceImpl;
 
 import com.SpringSecurity.SpringSecurity.entity.Users;
 import com.SpringSecurity.SpringSecurity.repository.UserRepo;
+import com.SpringSecurity.SpringSecurity.service.JWTService;
 import com.SpringSecurity.SpringSecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class userServiceImpl implements UserService {
+
+    @Autowired
+    private JWTService service;
 
     @Autowired
     private UserRepo userRepo;
@@ -35,7 +39,7 @@ public class userServiceImpl implements UserService {
                         new UsernamePasswordAuthenticationToken(users.getUsername() , users.getPassword()));
 
         if(authentication.isAuthenticated()){
-            return "Success";
+            return service.generateToken(users.getUsername());
         }
         return "Failure";
     }
